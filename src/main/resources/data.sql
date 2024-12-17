@@ -1,0 +1,6 @@
+INSERT INTO PUBLIC.USERS (CREATED_AT, EMAIL, PASSWORD, ROLES, USERNAME)
+VALUES ('2024-12-17 12:42:46.336000',
+        'info@escoz.net',
+        '$2a$10$pU5GGs4rgofyxXIoeNQSWu4fEJMAtXcPe2KoLAKGjky4WME0LF3Y.',
+        'USER',
+        'escoz');
