@@ -6,7 +6,6 @@ import net.escoz.demosecuritybff.controllers.dtos.TokenOutDTO;
 import net.escoz.demosecuritybff.controllers.dtos.user.LoginDTO;
 import net.escoz.demosecuritybff.controllers.dtos.user.RegisterDTO;
 import net.escoz.demosecuritybff.mappers.UserMapper;
-import net.escoz.demosecuritybff.models.AppUser;
 import net.escoz.demosecuritybff.security.JwtService;
 import net.escoz.demosecuritybff.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -27,11 +26,12 @@ public class AuthController {
 
 	@PostMapping("/register")
 	public ResponseEntity<TokenOutDTO> register(@Valid @RequestBody RegisterDTO request) {
-		AppUser appUser = userService.addUser(userMapper.toEntity(request));
+		userService.addUser(userMapper.toEntity(request));
+		String token = userService.login(request.getEmail(), request.getPassword());
 
 		return ResponseEntity
 				.status(HttpStatus.CREATED)
-				.body(new TokenOutDTO(HttpStatus.CREATED.value(), appUser.getEmail(), jwtService.getExpiration()));
+				.body(new TokenOutDTO(HttpStatus.CREATED.value(), token, jwtService.getExpiration()));
 	}
 
 	@PostMapping("/login")

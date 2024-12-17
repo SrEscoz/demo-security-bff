@@ -25,6 +25,7 @@ public class SecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable) // Deshabilitamos el CSRF para evitar problemas
 				.authorizeHttpRequests(registry ->
 						registry.requestMatchers("/auth/**", "/public/**").permitAll() // Rutas permitidas
+								.requestMatchers("/admin").hasRole("ADMIN") // Rutas del admin
 								.anyRequest().authenticated())
 				.formLogin(AbstractAuthenticationFilterConfigurer::permitAll) // En caso de error, retorna el login
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Filtro previo para JWT

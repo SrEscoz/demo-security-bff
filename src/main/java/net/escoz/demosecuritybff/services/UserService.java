@@ -1,5 +1,6 @@
 package net.escoz.demosecuritybff.services;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.escoz.demosecuritybff.models.AppUser;
 import net.escoz.demosecuritybff.repositories.UserRepository;
@@ -23,9 +24,10 @@ public class UserService {
 	private final DatabaseAuthManager databaseAuthManager;
 	private final AuthenticationManager authenticationManager;
 
-	public AppUser addUser(AppUser user) {
+	@Transactional
+	public void addUser(AppUser user) {
 		// Primero habría que comprobar duplicados
-		return userRepository.save(user);
+		userRepository.save(user);
 	}
 
 	public String login(String email, String password) {
