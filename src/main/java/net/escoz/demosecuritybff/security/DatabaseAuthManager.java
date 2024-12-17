@@ -9,6 +9,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -43,6 +45,29 @@ public class DatabaseAuthManager implements AuthenticationManager {
 		// Retornamos un objeto de tipo UsernamePasswordAuthenticationToken
 		return new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
 	}
+
+	public UserDetails loadUserByJwtUsername(String username) throws UsernameNotFoundException {
+		AppUser user = userRepository.findByUsername(username)
+				.orElseThrow(() -> new UsernameNotFoundException(username));
+
+		return User.builder()
+				.username(user.getUsername())
+				.password(user.getPassword())
+				.roles(getAuthorities(user))
+				.build();
+	}
+
+	public UserDetails loadByEmail(String email) throws UsernameNotFoundException {
+		AppUser user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException(email));
+
+		return User.builder()
+				.username(user.getUsername())
+				.password(user.getPassword())
+				.roles(getAuthorities(user))
+				.build();
+	}
+
 
 	private String[] getAuthorities(AppUser user) {
 		String roles = user.getRoles();

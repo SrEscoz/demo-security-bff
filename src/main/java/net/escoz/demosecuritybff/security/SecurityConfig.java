@@ -10,11 +10,14 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
+
+	private final JwtAuthFilter jwtAuthFilter;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -24,6 +27,7 @@ public class SecurityConfig {
 						registry.requestMatchers("/auth/**", "/public/**").permitAll() // Rutas permitidas
 								.anyRequest().authenticated())
 				.formLogin(AbstractAuthenticationFilterConfigurer::permitAll) // En caso de error, retorna el login
+				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Filtro previo para JWT
 				.build();
 	}
 
